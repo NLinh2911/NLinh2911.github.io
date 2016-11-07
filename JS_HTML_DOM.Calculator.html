@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>BT dựng 1 calculator</title>
+	<meta charset="utf-8"/>
+	<style type="text/css">
+/*		body {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+		}*/
+
+		header {
+			position: absolute;
+			top: 10%;
+			left: 30%;
+			text-align: center;
+			text-transform: capitalize;
+			font-size: 24px;
+			font-family:  'Lucida Sans Unicode', Arial, sans-serif;
+		}
+
+		#calculator {
+			position: absolute;
+			top: 20%;
+			left: 30%;
+			overflow: hidden;
+
+			border: solid 5px rgba(226, 71, 71, 0.62);
+			border-radius: 10px;
+			background-color: #f1dfdf;
+			padding: 5px;
+
+		}
+
+		#display {
+			margin-top: 30px;
+			width: 95%;
+			height: 40px;
+			position: relative;
+			left: 2%;
+			font-size: 18px;
+			text-align: right;
+
+		}
+
+		button {
+			margin: 5px;
+			width: 19%;
+			height: 30px;
+			border-radius: 5px;
+			overflow: hidden;
+		}
+
+		button:disabled {
+			color: black;
+		}
+
+		.common_operators {
+			background-color: #ef493d;
+		}
+
+		.special_operators {
+			background-color: #73b5bf;
+		}
+
+		.numbers {
+			background-color: ;
+		}
+
+	</style>
+</head>
+<body>
+	<header>a simple calculator</header>
+	<div id="calculator">
+
+		<input id="display" type="text" name="display screen">
+
+		<div class="rows" >
+			<button class="special_operators" id="squareRoot">&radic;</button>
+			<button class="special_operators" id="square">x<sup>2</sup></button>
+			<button class="special_operators" id="factorial">n!</button>
+			<button class="common_operators" onclick="operators('/')">/</button>
+
+		</div>
+
+		<div class="rows">
+			<button class="numbers" onclick="addNumbers(7)">7</button>
+			<button class="numbers" onclick="addNumbers(8)">8</button>
+			<button class="numbers" onclick="addNumbers(9)">9</button>
+			<button class="common_operators" onclick="operators('*')">*</button>
+		</div>
+
+		<div class="rows">
+			<button class="numbers" onclick="addNumbers(4)">4</button>
+			<button class="numbers" onclick="addNumbers(5)">5</button>
+			<button class="numbers" onclick="addNumbers(6)">6</button>
+			<button class="common_operators" onclick="operators('-')">-</button>
+
+		</div>
+
+		<div class="rows">
+			<button class="numbers" onclick="addNumbers(1)" value="1">1</button>
+			<button class="numbers" onclick="addNumbers(2)">2</button>
+			<button class="numbers" onclick="addNumbers(3)">3</button>
+			<button class="common_operators" onclick="operators('+')">+</button>
+
+		</div>
+
+		<div class="rows">
+			<button id= "reset">C</button>
+			<button onclick="addNumbers(0)">0</button>
+			<button onclick="operators('.')">.</button>
+			<button id="getResult">=</button>
+
+
+		</div>
+
+	</div>
+</body>
+<script type="text/javascript">
+	// function hiển thị giá trị khi bấm số hoặc phép toán
+	var maxLength = 30; //lấy giá trị tối đa 30 chữ số
+	function addNumbers(n) {
+		if (document.getElementById("display").value.length == 0) {
+			document.getElementById("display").value = n ;
+		}
+
+		else if (document.getElementById("display").value.length == 30) {
+			document.getElementById("display").value = document.getElementById("display").value;
+		}
+		else {
+			document.getElementById("display").value += n ;
+			var elems = document.getElementsByClassName("common_operators"); //Sau khi nút khác được bấm, số tiếp theo đc chọn, lại bật lại nút operators
+			for(var i = 0; i < elems.length; i++) {
+				elems[i].disabled = false;
+			}
+		}
+	}
+
+	// function của operators, chỉ được chọn operator 1 lần liên tiếp
+	function operators(n) {
+		if (document.getElementById("display").value.length == 0) {
+			document.getElementById("display").value = document.getElementById("display").value ;
+		}
+
+		else if (document.getElementById("display").value.length == 30) {
+			document.getElementById("display").value = document.getElementById("display").value;
+		}
+		else {
+			document.getElementById("display").value += n;
+			var elems = document.getElementsByClassName("common_operators"); // disable operators sau 1 click
+			for(var i = 0; i < elems.length; i++) { //ClassName trả 1 dãy gồm các elements với class common operators, loop qua từng giá trị và disable
+				elems[i].disabled = true;
+			}
+		}
+	}
+
+	// Reset lại màn hình và xóa giá trị khi bấm C/reset
+	function clear() {
+		document.getElementById("display").value = "";
+	}
+	document.getElementById("reset").addEventListener("click", clear, false);
+
+	// In ra kết quả khi click =
+	function getResult () {
+		var result = eval(document.getElementById("display").value);
+		document.getElementById("display").value = result;
+	}
+	document.getElementById("getResult").addEventListener("click", getResult, false);
+
+	// Phép toán đặc biệt
+	function square() {
+		if (document.getElementById("display").value.length != 0) {
+			var n = document.getElementById("display").value
+			var squareResult = Number(n)*Number(n);
+			document.getElementById("display").value = squareResult;
+		}
+	}
+	document.getElementById("square").addEventListener("click", square, false);
+
+	function squareRoot() {
+		if (document.getElementById("display").value.length != 0) {
+			var n = document.getElementById("display").value
+			var sqrtResult = Math.sqrt(n);
+			document.getElementById("display").value = sqrtResult;
+		}
+	}
+	document.getElementById("squareRoot").addEventListener("click", squareRoot, false);
+
+	function factorial() {
+		if (document.getElementById("display").value.length != 0) {
+			var n = document.getElementById("display").value
+			n = Number(n);
+			if (n === 0 || n ===1)
+				document.getElementById("display").value =  1;
+
+			for (var i = n-1; i >= 1; i--) {
+				n *= i;
+			}
+			document.getElementById("display").value = n;
+		}
+	}
+	document.getElementById("factorial").addEventListener("click", factorial, false);
+
+
+</script>
+</html>
